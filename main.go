@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"sort"
 )
 
 func main() {
@@ -25,7 +24,7 @@ func main() {
 		quit("Error reading input xml: %s\n", err)
 	}
 
-	lintConfig := convert(issues)
+	lintConfig := issues.Convert("")
 
 	xml, err := lintConfig.WriteXml()
 	if err != nil {
@@ -36,39 +35,6 @@ func main() {
 	if err != nil {
 		quit("Error writing output: %s\n", err)
 	}
-}
-
-func convert(issues *Issues) *LintConfiguration {
-	config := &LintConfiguration{}
-
-	lintIssues := make(map[string]LintIssue)
-	for _, issue := range issues.Issues {
-		// Skip issues without a file
-		if len(issue.Location.File) == 0 {
-			continue
-		}
-
-		if _, ok := lintIssues[issue.Id]; !ok {
-			lintIssue := LintIssue{
-				Id:      issue.Id,
-				Ignores: make([]LintIgnore, 0),
-			}
-			lintIssues[issue.Id] = lintIssue
-		}
-
-		lintIssue := lintIssues[issue.Id]
-		lintIssue.Ignores = append(lintIssue.Ignores, LintIgnore{issue.Location.File})
-		lintIssues[issue.Id] = lintIssue
-	}
-
-	config.Issues = make(LintIssues, 0, len(lintIssues))
-	for _, issue := range lintIssues {
-		sort.Sort(issue.Ignores)
-		config.Issues = append(config.Issues, issue)
-	}
-	sort.Sort(config.Issues)
-
-	return config
 }
 
 func quit(message string, args ...interface{}) {

@@ -7,8 +7,9 @@ import (
 )
 
 var (
-	lintOutputFile = "lint-output.xml"
-	lintConfigFile = "lint-config.xml"
+	lintOutputFile         = "lint-output.xml"
+	lintConfigFile         = "lint-config.xml"
+	lintFilteredConfigFile = "lint-config-filtered.xml"
 )
 
 var expected = Issues{
@@ -130,7 +131,27 @@ func TestConvert(t *testing.T) {
 		t.Fatalf("Error parsing input: %s", err)
 	}
 
-	config := convert(issues)
+	config := issues.Convert("")
+	xml, err := config.WriteXml()
+	if err != nil {
+		t.Fatalf("Error creating xml: %s", err)
+	}
+
+	if string(xml) != string(expected) {
+		t.Fatalf("Generated config ==\n%s\nwant\n%s\n", string(xml), string(expected))
+	}
+}
+
+func TestFiltered(t *testing.T) {
+	in := fixture(lintOutputFile, t)
+	expected := fixture(lintFilteredConfigFile, t)
+
+	issues, err := ReadLintXml(in)
+	if err != nil {
+		t.Fatalf("Error parsing input: %s", err)
+	}
+
+	config := issues.Convert("path/to/AnotherFile")
 	xml, err := config.WriteXml()
 	if err != nil {
 		t.Fatalf("Error creating xml: %s", err)
