@@ -1,10 +1,15 @@
 package main
 
 import (
+	"fmt"
+	"io/ioutil"
 	"testing"
 )
 
-var xmlFile = "fixtures/lint-output.xml"
+var (
+	lintOutputFile = "lint-output.xml"
+	lintConfigFile = "lint-config.xml"
+)
 
 var expected = Issues{
 	Format: 3,
@@ -50,7 +55,9 @@ var expected = Issues{
 }
 
 func TestImport(t *testing.T) {
-	issues, err := ImportLintXML(xmlFile)
+	data := fixture(lintOutputFile, t)
+
+	issues, err := ReadLintXml(data)
 	if err != nil {
 		t.Fatalf("Error importing xml: %s", err)
 	}
@@ -73,4 +80,38 @@ func TestImport(t *testing.T) {
 			t.Errorf("Issue %d ==\n%#v\nwant\n%#v", i, issue, expectedIssue)
 		}
 	}
+}
+
+func TestWrite(t *testing.T) {
+	config := LintConfiguration{
+		Issues: []LintIssue{
+			LintIssue{
+				Id:       "UnusedIds",
+				Severity: "ignore",
+			},
+			LintIssue{
+				Id:     "DefaultLocale",
+				Ignore: &LintIgnore{Path: "path/to/File.class"},
+			},
+		},
+	}
+
+	data, err := config.WriteXml()
+	if err != nil {
+		t.Fatalf("Error writing xml: %s", err)
+	}
+
+	expected := fixture(lintConfigFile, t)
+
+	if string(data) != string(expected) {
+		t.Fatalf("Generated xml ==\n%s\nwant\n%s\n", string(data), string(expected))
+	}
+}
+
+func fixture(name string, t *testing.T) []byte {
+	data, err := ioutil.ReadFile(fmt.Sprintf("fixtures/%s", name))
+	if err != nil {
+		t.Fatalf("Error reading fixture %s: %s", name, err)
+	}
+	return data
 }
