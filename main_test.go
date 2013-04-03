@@ -122,42 +122,41 @@ func TestWrite(t *testing.T) {
 	}
 }
 
-func TestConvert(t *testing.T) {
-	in := fixture(lintOutputFile, t)
-	expected := fixture(lintConfigFile, t)
-
-	issues, err := ReadLintXml(in)
-	if err != nil {
-		t.Fatalf("Error parsing input: %s", err)
-	}
-
-	config := issues.Convert("")
-	xml, err := config.WriteXml()
-	if err != nil {
-		t.Fatalf("Error creating xml: %s", err)
-	}
-
-	if string(xml) != string(expected) {
-		t.Fatalf("Generated config ==\n%s\nwant\n%s\n", string(xml), string(expected))
-	}
+var convertTestCases = []struct {
+	expectedFixture string
+	filter          string
+}{
+	{
+		expectedFixture: lintConfigFile,
+		filter:          "",
+	},
+	{
+		expectedFixture: lintFilteredConfigFile,
+		filter:          "path/to/AnotherFile",
+	},
 }
 
-func TestFiltered(t *testing.T) {
-	in := fixture(lintOutputFile, t)
-	expected := fixture(lintFilteredConfigFile, t)
+func TestConvert(t *testing.T) {
+	for i, testCase := range convertTestCases {
+		in := fixture(lintOutputFile, t)
+		expected := fixture(testCase.expectedFixture, t)
 
-	issues, err := ReadLintXml(in)
-	if err != nil {
-		t.Fatalf("Error parsing input: %s", err)
-	}
+		issues, err := ReadLintXml(in)
+		if err != nil {
+			t.Errorf("[%d] Error parsing input: %s", i, err)
+			continue
+		}
 
-	config := issues.Convert("path/to/AnotherFile")
-	xml, err := config.WriteXml()
-	if err != nil {
-		t.Fatalf("Error creating xml: %s", err)
-	}
+		config := issues.Convert(testCase.filter)
+		xml, err := config.WriteXml()
+		if err != nil {
+			t.Fatalf("[%d] Error creating xml: %s", i, err)
+			continue
+		}
 
-	if string(xml) != string(expected) {
-		t.Fatalf("Generated config ==\n%s\nwant\n%s\n", string(xml), string(expected))
+		if string(xml) != string(expected) {
+			t.Errorf("[%d] Generated config ==\n%s\nwant\n%s\n", i, string(xml), string(expected))
+			continue
+		}
 	}
 }
