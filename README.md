@@ -1,7 +1,8 @@
 # lint-ignore-generator
 
-lint-ignore-generator converts the [Android lint tool][] report xml file to a
-lint configuration file ignoring each error and file that occurs in the report.
+lint-ignore-generator converts an [Android lint tool][] report xml file to a
+lint configuration file. It creates an ignore entry for each error and file
+path that occurs in the report.
 
 ## Installation
 
@@ -13,10 +14,12 @@ Install or update using the `go get` command:
 
 ## Usage
 
-	lint-ignore-generator lint-report.xml lint-config.xml
+	lint-ignore-generator [options]
 
-lint-ignore-generator takes a lint report file in xml format as its input and
-generates a lint configuration xml file.
+Options:
+	-f Filter by path
+	-i Input: Lint XML report
+	-o Output: Lint configuration file
 
 ## License
 
