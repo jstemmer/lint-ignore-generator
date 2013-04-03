@@ -30,19 +30,31 @@ type Location struct {
 }
 
 type LintConfiguration struct {
-	XMLName xml.Name    `xml:"lint"`
-	Issues  []LintIssue `xml:"issue"`
+	XMLName xml.Name   `xml:"lint"`
+	Issues  LintIssues `xml:"issue"`
 }
 
 type LintIssue struct {
 	Id       string      `xml:"id,attr"`
 	Severity string      `xml:"severity,attr,omitempty"`
-	Ignore   *LintIgnore `xml:"ignore,omitempty"`
+	Ignores  LintIgnores `xml:"ignore,omitempty"`
 }
+
+type LintIssues []LintIssue
+
+func (l LintIssues) Len() int           { return len(l) }
+func (l LintIssues) Less(i, j int) bool { return l[i].Id < l[j].Id }
+func (l LintIssues) Swap(i, j int)      { l[i], l[j] = l[j], l[i] }
 
 type LintIgnore struct {
 	Path string `xml:"path,attr"`
 }
+
+type LintIgnores []LintIgnore
+
+func (l LintIgnores) Len() int           { return len(l) }
+func (l LintIgnores) Less(i, j int) bool { return l[i].Path < l[j].Path }
+func (l LintIgnores) Swap(i, j int)      { l[i], l[j] = l[j], l[i] }
 
 // ReadLintXml reads the given xml and returns the Issues if it unmarshals correctly.
 func ReadLintXml(data []byte) (*Issues, error) {

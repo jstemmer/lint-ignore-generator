@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
-	<issue id="UnusedIds" severity="ignore"></issue>
 	<issue id="DefaultLocale">
+		<ignore path="path/to/AnotherFile.class"></ignore>
+		<ignore path="path/to/File.class"></ignore>
+	</issue>
+	<issue id="NewApi">
 		<ignore path="path/to/File.class"></ignore>
 	</issue>
 </lint>

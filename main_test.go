@@ -54,6 +54,14 @@ var expected = Issues{
 	},
 }
 
+func fixture(name string, t *testing.T) []byte {
+	data, err := ioutil.ReadFile(fmt.Sprintf("fixtures/%s", name))
+	if err != nil {
+		t.Fatalf("Error reading fixture %s: %s", name, err)
+	}
+	return data
+}
+
 func TestImport(t *testing.T) {
 	data := fixture(lintOutputFile, t)
 
@@ -86,12 +94,17 @@ func TestWrite(t *testing.T) {
 	config := LintConfiguration{
 		Issues: []LintIssue{
 			LintIssue{
-				Id:       "UnusedIds",
-				Severity: "ignore",
+				Id: "DefaultLocale",
+				Ignores: []LintIgnore{
+					LintIgnore{"path/to/AnotherFile.class"},
+					LintIgnore{"path/to/File.class"},
+				},
 			},
 			LintIssue{
-				Id:     "DefaultLocale",
-				Ignore: &LintIgnore{Path: "path/to/File.class"},
+				Id: "NewApi",
+				Ignores: []LintIgnore{
+					LintIgnore{"path/to/File.class"},
+				},
 			},
 		},
 	}
@@ -108,10 +121,22 @@ func TestWrite(t *testing.T) {
 	}
 }
 
-func fixture(name string, t *testing.T) []byte {
-	data, err := ioutil.ReadFile(fmt.Sprintf("fixtures/%s", name))
+func TestConvert(t *testing.T) {
+	in := fixture(lintOutputFile, t)
+	expected := fixture(lintConfigFile, t)
+
+	issues, err := ReadLintXml(in)
 	if err != nil {
-		t.Fatalf("Error reading fixture %s: %s", name, err)
+		t.Fatalf("Error parsing input: %s", err)
 	}
-	return data
+
+	config := convert(issues)
+	xml, err := config.WriteXml()
+	if err != nil {
+		t.Fatalf("Error creating xml: %s", err)
+	}
+
+	if string(xml) != string(expected) {
+		t.Fatalf("Generated config ==\n%s\nwant\n%s\n", string(xml), string(expected))
+	}
 }
