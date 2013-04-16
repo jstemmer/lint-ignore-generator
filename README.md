@@ -16,10 +16,16 @@ Install or update using the `go get` command:
 
 	lint-ignore-generator [options]
 
-Options:
-	-f Filter by path
-	-i Input: Lint XML report
-	-o Output: Lint configuration file
+	Options:
+		-f Filter by path
+		-i Input: Lint XML report
+		-o Output: Lint configuration file
+
+### Example
+
+Add all `actionbarsherlock` occurrences from `lint-report.xml` to `lint.xml`.
+
+	lint-ignore-generator -i lint-report.xml -o lint.xml -f actionbarsherlock
 
 ## License
 
