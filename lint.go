@@ -42,6 +42,13 @@ type LintIssue struct {
 	Ignores  LintIgnores `xml:"ignore,omitempty"`
 }
 
+func (l *LintIssue) AddIgnore(ignore LintIgnore) {
+	if l.Ignores.Exists(ignore) {
+		return
+	}
+	l.Ignores = append(l.Ignores, ignore)
+}
+
 type LintIssues []LintIssue
 
 func (l LintIssues) Len() int           { return len(l) }
@@ -57,6 +64,15 @@ type LintIgnores []LintIgnore
 func (l LintIgnores) Len() int           { return len(l) }
 func (l LintIgnores) Less(i, j int) bool { return l[i].Path < l[j].Path }
 func (l LintIgnores) Swap(i, j int)      { l[i], l[j] = l[j], l[i] }
+
+func (l LintIgnores) Exists(ignore LintIgnore) bool {
+	for _, i := range l {
+		if i.Path == ignore.Path {
+			return true
+		}
+	}
+	return false
+}
 
 // ReadLintXml reads the given xml and returns the Issues if it unmarshals
 // correctly.
@@ -97,7 +113,7 @@ func (i *Issues) Convert(filter string) *LintConfiguration {
 		}
 
 		lintIssue := lintIssues[issue.Id]
-		lintIssue.Ignores = append(lintIssue.Ignores, LintIgnore{issue.Location.File})
+		lintIssue.AddIgnore(LintIgnore{issue.Location.File})
 		lintIssues[issue.Id] = lintIssue
 	}
 

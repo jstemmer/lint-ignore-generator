@@ -51,6 +51,18 @@ var lintReport = Issues{
 			Quickfix:    "adt",
 			Location:    Location{File: "path/to/File.class"},
 		},
+		Issue{
+			Id:          "NewApi",
+			Severity:    "Error",
+			Message:     "Call ...#2",
+			Category:    "Correctness",
+			Priority:    6,
+			Summary:     "Finds ...",
+			Explanation: "This ...",
+			Url:         "",
+			Quickfix:    "adt",
+			Location:    Location{File: "path/to/File.class"},
+		},
 	},
 }
 

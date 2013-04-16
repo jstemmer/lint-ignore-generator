@@ -40,4 +40,17 @@
 			file="path/to/File.class"/>
 	</issue>
 
+	<issue
+		id="NewApi"
+		severity="Error"
+		message="Call ...#2"
+		category="Correctness"
+		priority="6"
+		summary="Finds ..."
+		explanation="This ..."
+		quickfix="adt">
+		<location
+			file="path/to/File.class"/>
+	</issue>
+
 </issues>
