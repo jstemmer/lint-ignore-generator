@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <issues format="3" by="lint 21.1">
 
-    <issue
-        id="DefaultLocale"
-        severity="Warning"
-        message="Implicitly ..."
-        category="Correctness"
-        priority="6"
-        summary="Finds ..."
-        explanation="Calling ..."
-		url="http://developer.android.com/reference/java/util/Locale.html#default_locale">
-        <location
-			file="path/to/File.class"/>
-    </issue>
-
-    <issue
-        id="DefaultLocale"
-        severity="Warning"
-        message="Implicitly ..."
-        category="Correctness"
-        priority="6"
-        summary="Finds ..."
+	<issue
+		id="DefaultLocale"
+		severity="Warning"
+		message="Implicitly ..."
+		category="Correctness"
+		priority="6"
+		summary="Finds ..."
 		explanation="Calling ..."
 		url="http://developer.android.com/reference/java/util/Locale.html#default_locale">
-        <location
-			file="path/to/AnotherFile.class"/>
-    </issue>
-
-    <issue
-        id="NewApi"
-        severity="Error"
-        message="Call ..."
-        category="Correctness"
-        priority="6"
-        summary="Finds ..."
-        explanation="This ..."
-        quickfix="adt">
-        <location
+		<location
 			file="path/to/File.class"/>
-    </issue>
+	</issue>
+
+	<issue
+		id="DefaultLocale"
+		severity="Warning"
+		message="Implicitly ..."
+		category="Correctness"
+		priority="6"
+		summary="Finds ..."
+		explanation="Calling ..."
+		url="http://developer.android.com/reference/java/util/Locale.html#default_locale">
+		<location
+			file="path/to/AnotherFile.class"/>
+	</issue>
+
+	<issue
+		id="NewApi"
+		severity="Error"
+		message="Call ..."
+		category="Correctness"
+		priority="6"
+		summary="Finds ..."
+		explanation="This ..."
+		quickfix="adt">
+		<location
+			file="path/to/File.class"/>
+	</issue>
 
 </issues>
