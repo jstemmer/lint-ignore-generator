@@ -4,6 +4,8 @@ lint-ignore-generator converts an [Android lint tool][] report xml file to a
 lint configuration file. It creates an ignore entry for each error and file
 path that occurs in the report.
 
+[![Build Status](https://travis-ci.org/jstemmer/lint-ignore-generator.png?branch=master)](https://travis-ci.org/jstemmer/lint-ignore-generator)
+
 ## Installation
 
 Make sure you have [Go][] installed.
